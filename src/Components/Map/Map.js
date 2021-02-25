@@ -4,28 +4,22 @@ import "./Map.scss"
 import Wx from "../Wx/Wx";
 
 
-
 const Map = () => {
-    const [mapData, setMapData] = useState({center: {lat: 51, lng: 21}, zoom: 13});
-    const [position, setPosition] = useState(null)
+    const [mapData, setMapData] = useState({center: {lat: 30, lng: 121}, zoom: 14});
+    const [position, setPosition] = useState({center: {lat: 151, lng: 121}, zoom: 14})
 
     const getPosition = () => {
-        navigator.geolocation.getCurrentPosition(position => {
-            if (typeof position !== "undefined") {
-                setPosition({
-                    position
-                })
-                console.log(`position obtained ${position}`)
-            }
-        }, error => {
-            console.log("position update not available")
-        }, {
-            enableHighAccuracy: false,
-            maximumAge: 30000,
-            timeout: 10000
-        })
-    };
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                if (typeof position !== "undefined") {
+                    setPosition({center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 15});
+                    setMapData({center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 15})
+                    console.log(`${position.coords.latitude} ${position.coords.longitude}`);
+                }
+            })
 
+        }
+    };
 
 
     const clickHandler = ({x, y, lat, lng, event}) => {
@@ -35,17 +29,16 @@ const Map = () => {
     }
 
     useEffect(() => {
-
-    }, [mapData])
-
-    useEffect(()=>{
         getPosition()
-    },[])
+    }, [])
+    useEffect(()=>{
+
+    },[setPosition])
 
 
     return (
         <div className="map">
-            <Wx coordinates={mapData.center}/>
+            <Wx coordinates={mapData.center} position={position.center}/>
             <GoogleMapReact
                 onClick={clickHandler}
                 resetBoundsOnResize={true}
