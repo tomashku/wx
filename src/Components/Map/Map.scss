@@ -3,4 +3,10 @@
   height: 100vh;
   position: relative;
 
+  & button {
+    display: none;
+  }
+  &.gm-control-active {
+    display: none;
+  }
 }

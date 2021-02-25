@@ -27,8 +27,8 @@ const Wx = ({coordinates, position}) => {
         console.log(place);
     };
 
-
-    const apiKey = "53e64af4ba678004519c753fd940ef5f";
+    // 53e64af4ba678004519c753fd940ef5f
+    const apiKey = "d9aa85904c769b23565749544d0c00ce";
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
 
     const getWx = () => {
@@ -60,7 +60,7 @@ const Wx = ({coordinates, position}) => {
 
     useEffect(() => {
         getWx()
-    }, []);
+    }, [getWx]);
 
     if (apiData.error !== false) {
         return (
@@ -76,8 +76,6 @@ const Wx = ({coordinates, position}) => {
                 <h4>{apiData.celsius}</h4>
                 <h4>{apiData.description}</h4>
             </div>
-
-
         )
     }
 }

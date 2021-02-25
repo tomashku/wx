@@ -31,6 +31,7 @@ const Map = () => {
     useEffect(() => {
         getPosition()
     }, [])
+
     useEffect(()=>{
 
     },[setPosition])
@@ -48,6 +49,7 @@ const Map = () => {
                 center={mapData.center}
                 defaultZoom={mapData.zoom}
                 yesIWantToUseGoogleMapApiInternals={true}
+                disableDefaultUI={true}
             >
             </GoogleMapReact>
         </div>
