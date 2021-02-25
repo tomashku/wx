@@ -5,8 +5,8 @@ import Wx from "../Wx/Wx";
 
 
 const Map = () => {
-    const [mapData, setMapData] = useState({center: {lat: 30, lng: 121}, zoom: 14});
-    const [position, setPosition] = useState({center: {lat: 151, lng: 121}, zoom: 14})
+    const [mapData, setMapData] = useState({center: {lat: 51, lng: 21}, zoom: 1});
+    const [position, setPosition] = useState({center: {lat: 51, lng: 21}, zoom: 1})
 
     const getPosition = () => {
         if ("geolocation" in navigator) {

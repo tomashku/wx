@@ -15,6 +15,18 @@ const Wx = ({coordinates, position}) => {
         error: false
     });
 
+    const [place, setPlace] = useState("")
+
+    const handleChange = (e) => {
+        setPlace(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        document.querySelector("form").reset();
+        console.log(place);
+    };
+
 
     const apiKey = "53e64af4ba678004519c753fd940ef5f";
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
@@ -46,7 +58,6 @@ const Wx = ({coordinates, position}) => {
         });
     }
 
-
     useEffect(() => {
         getWx()
     }, []);
@@ -58,6 +69,9 @@ const Wx = ({coordinates, position}) => {
     } else {
         return (
             <div className="wx__info__panel">
+                <form action="" onSubmit={handleSubmit}>
+                    <input type="text" placeholder={"seacrh for a place..."} onChange={handleChange}/>
+                </form>
                 <h4>{apiData.city}</h4>
                 <h4>{apiData.celsius}</h4>
                 <h4>{apiData.description}</h4>
