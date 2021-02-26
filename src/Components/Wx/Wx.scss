@@ -2,7 +2,7 @@
   position: absolute;
   left: 20px;
   top: 20px;
-  z-index: 1;
+  z-index: 2;
   width: 300px;
   border-radius: 5px;
   padding: 10px;
@@ -22,9 +22,31 @@
       font-size: 14px;
     }
   }
-
-
   & h4 {
     color: lightgray;
   }
+  & .info__from__form {
+    position: relative;
+  }
+  & .info__from__map {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.error__message {
+  position: absolute;
+  left: calc(50% - 150px);
+  top: calc(50% - 100px);
+  z-index: 1;
+  width: 300px;
+  height: 200px;
+  border-radius: 5px;
+  background-color: red;
+  box-shadow: 5px 5px 22px 5px rgba(0,0,0,0.51);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }

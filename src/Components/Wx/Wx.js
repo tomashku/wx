@@ -5,7 +5,7 @@ const controller = new AbortController();
 const signal = controller.signal;
 
 
-const Wx = ({coordinates, position}) => {
+const Wx = ({coordinates}) => {
     const [apiData, setApiData] = useState({
         city: undefined,
         country: undefined,
@@ -19,37 +19,32 @@ const Wx = ({coordinates, position}) => {
     });
 
     const [place, setPlace] = useState("Warsaw")
-    let cityName = ""
 
     const handleChange = (e) => {
         setPlace(e.target.value);
     };
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        cityName = place;
-        console.log("city name", cityName)
         getWx();
         document.querySelector("form").reset();
-
     };
 
     // 53e64af4ba678004519c753fd940ef5f
     // d9aa85904c769b23565749544d0c00ce
-    const apiKey = "53e64af4ba678004519c753fd940ef5f";
 
-    const apiUrlCoordinates = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
-    const apiUrlCity = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`
+    const apiKey = "d9aa85904c769b23565749544d0c00ce";
+    let api = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
+    // const apiUrlCoordinates = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
+    // const apiUrlCity = `https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=${apiKey}`
 
     const getWx = () => {
         function calCelsius(temp) {
             return Math.floor(temp - 273.15);
         }
 
-
-
-
-        fetch(`${apiUrlCoordinates}`, {signal})
+        fetch(`${api}`, {signal})
             .then(response => response.json())
             .then(data => {
                     if (data.cod !== 429) {
@@ -62,7 +57,7 @@ const Wx = ({coordinates, position}) => {
                             temp_min: calCelsius(data.main.temp_min),
                             description: data.weather[0].description,
                             error: false
-                        })
+                        });
                     } else {
                         setApiData({error: data.message})
                         controller.abort();
@@ -75,24 +70,28 @@ const Wx = ({coordinates, position}) => {
 
 
     useEffect(() => {
-        getWx()
-    }, [getWx]);
 
-    if (apiData.error !== false) {
-        return <h4 className="wx__info__panel">{apiData.error}</h4>
-    } else {
-        return (
-            <div className="wx__info__panel">
-                <form action="" onSubmit={handleSubmit}>
-                    <input type="text" placeholder={"seacrh for a place..."} onChange={handleChange}/>
-                </form>
+    }, [handleSubmit]);
+
+    useEffect(()=> {
+        getWx()
+    },[coordinates])
+
+    // if (apiData.error !== false) {
+    //     return <h4 className="error__message">{apiData.error}</h4>
+    // } else {
+    return (
+        <div className="wx__info__panel">
+            <form action="" onSubmit={handleSubmit}>
+                <input type="text" placeholder={"seacrh for a place..."} onChange={handleChange}/>
+            </form>
                 <h4>{apiData.city}</h4>
-                <h4>{apiData.celsius}</h4>
+                <h4>Temp. {apiData.celsius}{'\u00b0'}C</h4>
+                <h4>Temp. max {apiData.temp_max}{'\u00b0'}C</h4>
+                <h4>Temp. min {apiData.temp_max}{'\u00b0'}C</h4>
                 <h4>{apiData.description}</h4>
-                <h4>{apiData.error}</h4>
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default Wx

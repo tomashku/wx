@@ -10,6 +10,8 @@ const Map = () => {
 
     const getPosition = () => {
         if ("geolocation" in navigator) {
+            console.log("geolocation available");
+
             navigator.geolocation.getCurrentPosition(position => {
                 if (typeof position !== "undefined") {
                     setPosition({center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 15});
@@ -31,10 +33,6 @@ const Map = () => {
     useEffect(() => {
         getPosition()
     }, [])
-
-    useEffect(()=>{
-
-    },[setPosition])
 
 
     return (
