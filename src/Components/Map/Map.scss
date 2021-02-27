@@ -5,8 +5,9 @@
 
   & button {
     display: none;
+    margin-right: 200px;
   }
-  &.gm-control-active {
+  .gm-bundled-control > div:nth-child(2) {
     display: none;
   }
 }
