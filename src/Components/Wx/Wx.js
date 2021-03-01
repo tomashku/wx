@@ -6,7 +6,7 @@ const controller = new AbortController();
 const signal = controller.signal;
 
 
-const Wx = ({coordinates}) => {
+const Wx = ({coordinates, mapData}) => {
     const [apiData, setApiData] = useState({
         city: undefined,
         country: undefined,
@@ -16,10 +16,17 @@ const Wx = ({coordinates}) => {
         temp_max: null,
         temp_min: null,
         description: "",
+        windDir: null,
+        windSpeed: null,
+        press: null,
+        utcOffset: null,
+        localTime: null,
         error: false
     });
+
     const [wxCoordinates, setWxCoordinates] = useState({lat: 0, lon: 0})
     const [place, setPlace] = useState("Warsaw")
+    const [localTime, setLocalTime] = useState()
 
     const apiKey = "d9aa85904c769b23565749544d0c00ce";
     let api = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
@@ -44,11 +51,11 @@ const Wx = ({coordinates}) => {
         fetch(`${api}`, {signal})
             .then(response => response.json())
             .then(data => {
-                    console.log(data)
                     if (typeof data.cod !== 429) {
                         setWxCoordinates({lat: data.coord.lat, lon: data.coord.lon});
+                        setLocalTime((data.dt + data.timezone)* 1000)
                         setApiData({
-                            city: `${data.name}`,
+                            city: data.name,
                             country: data.sys.country,
                             main: data.weather[0].main,
                             celsius: calCelsius(data.main.temp),
@@ -59,7 +66,6 @@ const Wx = ({coordinates}) => {
                             windSpeed: data.wind.speed,
                             press: data.main.pressure,
                             icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
-                            utcOffset: data.timezone,
                             error: false
                         });
                     } else {
@@ -72,16 +78,12 @@ const Wx = ({coordinates}) => {
         });
     }
 
-    const today = new Date()
+    const today = new Date(localTime)
     const date = today.getDate();
     const month = today.getMonth() + 1;
     const hour = today.getUTCHours()
     const minutes = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    useEffect(() => {
-
-    }, [handleSubmit]);
 
     useEffect(() => {
         getWx()
@@ -104,13 +106,13 @@ const Wx = ({coordinates}) => {
                         <h3>{apiData.city}</h3>
                         <div className="time__date">
                             <h5>{date} {monthNames[month]}</h5>
-                            <h5>{hour + apiData.utcOffset / 3600} : {minutes}</h5>
+                            <h5>{hour} : {minutes}</h5>
                         </div>
                     </div>
                     <div className="current__wx__main">
                         <div className="current__wx__left">
                             <h4>Temp: {apiData.celsius}{'\u00b0'}C</h4>
-                            <h4>Wind:  {apiData.windDir}{'\u00b0'}  {apiData.windSpeed}m/s</h4>
+                            <h4>Wind: {apiData.windDir}{'\u00b0'} {apiData.windSpeed}m/s</h4>
                             <h4>Press: {apiData.press} hpa</h4>
                         </div>
                         <div className="current__wx__right">
@@ -127,4 +129,3 @@ const Wx = ({coordinates}) => {
     }
 }
 export default Wx
-
