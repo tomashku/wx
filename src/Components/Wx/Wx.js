@@ -1,12 +1,9 @@
 import React, {useState, useEffect} from "react";
 import "./Wx.scss"
+// const controller = new AbortController();
+// const signal = controller.signal;
 
-
-const controller = new AbortController();
-const signal = controller.signal;
-
-
-const Wx = ({coordinates, mapData}) => {
+const Wx = ({coordinates, setMapData, mapData}) => {
     const [apiData, setApiData] = useState({
         city: undefined,
         country: undefined,
@@ -21,15 +18,19 @@ const Wx = ({coordinates, mapData}) => {
         press: null,
         utcOffset: null,
         localTime: null,
+        latitude: null,
+        longitude: null,
         error: false
     });
 
-    const [wxCoordinates, setWxCoordinates] = useState({lat: 0, lon: 0})
-    const [place, setPlace] = useState("Warsaw")
-    const [localTime, setLocalTime] = useState()
+    const [place, setPlace] = useState("Warsaw");
+    const [localTime, setLocalTime] = useState();
 
+    // 53e64af4ba678004519c753fd940ef5f
+    // d9aa85904c769b23565749544d0c00ce
     const apiKey = "d9aa85904c769b23565749544d0c00ce";
-    let api = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`
+    let api = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lng}&appid=${apiKey}`;
+    // let apiWx = `http://maps.openweathermap.org/maps/2.0/weather/${PR0}/${0}/${0}/{y}&appid=${apiKey}`
 
     const handleChange = (e) => {
         setPlace(e.target.value);
@@ -39,39 +40,33 @@ const Wx = ({coordinates, mapData}) => {
         getWx();
         document.querySelector("form").reset();
     };
-    // 53e64af4ba678004519c753fd940ef5f
-    // d9aa85904c769b23565749544d0c00ce
-
 
     const getWx = () => {
         function calCelsius(temp) {
             return Math.floor(temp - 273.15);
         }
-
-        fetch(`${api}`, {signal})
+        fetch(`${api}`)
             .then(response => response.json())
             .then(data => {
-                    if (typeof data.cod !== 429) {
-                        setWxCoordinates({lat: data.coord.lat, lon: data.coord.lon});
-                        setLocalTime((data.dt + data.timezone)* 1000)
-                        setApiData({
-                            city: data.name,
-                            country: data.sys.country,
-                            main: data.weather[0].main,
-                            celsius: calCelsius(data.main.temp),
-                            temp_max: calCelsius(data.main.temp_max),
-                            temp_min: calCelsius(data.main.temp_min),
-                            description: data.weather[0].description,
-                            windDir: data.wind.deg,
-                            windSpeed: data.wind.speed,
-                            press: data.main.pressure,
-                            icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
-                            error: false
-                        });
-                    } else {
-                        setApiData({error: data.message})
-                        controller.abort();
-                    }
+                console.log(data.cod)
+                    setLocalTime((data.dt + data.timezone) * 1000)
+                    setApiData({
+                        city: data.name,
+                        country: data.sys.country,
+                        main: data.weather[0].main,
+                        celsius: calCelsius(data.main.temp),
+                        temp_max: calCelsius(data.main.temp_max),
+                        temp_min: calCelsius(data.main.temp_min),
+                        description: data.weather[0].description,
+                        windDir: data.wind.deg,
+                        windSpeed: data.wind.speed,
+                        press: data.main.pressure,
+                        icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+                        latitude: data.coord.lat,
+                        longitude: data.coord.lon,
+                        error: false,
+                        code: data.cod
+                    });
                 }
             ).catch((error) => {
             console.log(error)
@@ -84,6 +79,12 @@ const Wx = ({coordinates, mapData}) => {
     const hour = today.getUTCHours()
     const minutes = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    useEffect(()=> {
+        if(typeof setMapData === 'function') {
+                setMapData({center: {lat: +apiData.latitude, lng: +apiData.longitude}, zoom: 10})
+        }
+    },[apiData.latitude]);
 
     useEffect(() => {
         getWx()
@@ -103,7 +104,7 @@ const Wx = ({coordinates, mapData}) => {
                 </form>
                 <div className="current__wx">
                     <div className="current__wx__header">
-                        <h3>{apiData.city}</h3>
+                        <h3>{apiData.city} {apiData.country}</h3>
                         <div className="time__date">
                             <h5>{date} {monthNames[month]}</h5>
                             <h5>{hour} : {minutes}</h5>
@@ -122,7 +123,6 @@ const Wx = ({coordinates, mapData}) => {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         )

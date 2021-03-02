@@ -5,7 +5,7 @@ import Wx from "../Wx/Wx";
 
 
 const Map = () => {
-    const [mapData, setMapData] = useState({center: {lat: 51, lng: 21}, zoom: 10});
+    const [mapData, setMapData] = useState({center: {lat: null, lng: null}, zoom: 1});
 
     const getPosition = () => {
         if ("geolocation" in navigator) {
@@ -19,7 +19,7 @@ const Map = () => {
 
     const clickHandler = ({x, y, lat, lng, event}) => {
         setMapData({
-            center: {lat: lat, lng: lng}, zoom: 14
+            center: {lat: lat, lng: lng}, zoom: 1
         });
     }
 
@@ -31,8 +31,8 @@ const Map = () => {
     },[mapData])
 
     return (
-        <div className="map">
-            <Wx coordinates={mapData.center} setMapData={setMapData} mapData={mapData}/>
+        <div className="map" >
+            <Wx coordinates={mapData.center} setMapData={setMapData} mapdData={mapData}/>
             <GoogleMapReact
                 onClick={clickHandler}
                 resetBoundsOnResize={true}
