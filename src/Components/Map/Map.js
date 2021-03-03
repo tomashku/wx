@@ -6,12 +6,11 @@ import Wx from "../Wx/Wx";
 
 const Map = () => {
     const [mapData, setMapData] = useState({center: {lat: null, lng: null}, zoom: 1});
-
     const getPosition = () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(position => {
                 if (typeof position !== "undefined") {
-                    setMapData({center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 15})
+                    setMapData({center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 10})
                 }
             })
         }
@@ -19,7 +18,7 @@ const Map = () => {
 
     const clickHandler = ({x, y, lat, lng, event}) => {
         setMapData({
-            center: {lat: lat, lng: lng}, zoom: 1
+            center: {lat: lat, lng: lng}, zoom: 13
         });
     }
 
@@ -27,8 +26,6 @@ const Map = () => {
          getPosition()
     }, [])
 
-    useEffect(()=> {
-    },[mapData])
 
     return (
         <div className="map" >

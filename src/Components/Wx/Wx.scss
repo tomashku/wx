@@ -23,13 +23,9 @@
       font-weight: lighter;
       font-size: 14px;
     }
-    & .error {
-      border: red;
-    }
   }
 
   & .current__wx {
-
 
     & .current__wx__header {
       width: 100%;
@@ -40,6 +36,7 @@
       margin-bottom: 20px;
       padding: 0 10px;
       color: black;
+      border-bottom: 1px solid lightgray;
 
       & .time__date {
         width: 130px;
@@ -51,8 +48,7 @@
     & .current__wx__main {
       display: flex;
       justify-content: space-between;
-      padding: 0 10px
-    ;
+      padding: 0 10px;
 
       & .current__wx__left {
 
@@ -93,8 +89,8 @@
     font-size: large;
     color: black;
     margin-bottom: 25px;
-    width: 150px;
-    height: 30px;
+    width: 260px;
+    height: 50px;
   }
 
   & h4 {
