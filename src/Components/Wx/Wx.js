@@ -46,7 +46,7 @@ const Wx = ({coordinates, setMapData, mapData}) => {
         fetch(`${api}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                setError(null)
                     setLocalTime((data.dt + data.timezone) * 1000)
                     setApiData({
                         city: data.name,
@@ -79,7 +79,7 @@ const Wx = ({coordinates, setMapData, mapData}) => {
     const today = new Date(localTime)
     const date = today.getDate();
     const month = today.getMonth() + 1;
-    const hour = today.getUTCHours()
+    const hour = today.getUTCHours() < 10 ? `0${today.getUTCHours()}` : today.getUTCHours();
     const minutes = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -114,7 +114,7 @@ const Wx = ({coordinates, setMapData, mapData}) => {
                         <h3>{apiData.city} {apiData.country}</h3>
                         <div className="time__date">
                             <h5>{error === null ? date : ""} {monthNames[month]}</h5>
-                            <h5>{error === null ? hour +` :` : ""} {error === null ? minutes : ""}</h5>
+                            <h5>{error === null ? hour +` :` : " "} {error === null ? minutes : " "}</h5>
                         </div>
                     </div>
                     <span/>
