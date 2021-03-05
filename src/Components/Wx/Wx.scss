@@ -9,6 +9,9 @@
   padding: 10px;
   background-color: dodgerblue;
   box-shadow: 5px 5px 22px 5px rgba(0, 0, 0, 0.51);
+  @media (max-width: 500px) {
+    left: calc(50% - 175px);
+  }
 
   & form {
 

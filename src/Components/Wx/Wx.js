@@ -46,7 +46,7 @@ const Wx = ({coordinates, setMapData, mapData}) => {
         fetch(`${api}`)
             .then(response => response.json())
             .then(data => {
-                setError(null)
+                    setError(null)
                     setLocalTime((data.dt + data.timezone) * 1000)
                     setApiData({
                         city: data.name,
@@ -73,6 +73,7 @@ const Wx = ({coordinates, setMapData, mapData}) => {
         const alertTimeOut = setTimeout(function () {
             document.querySelector("input").style.border = "none"
         }, 300)
+        return () => clearTimeout(alertTimeOut);
     }
 
 
@@ -114,7 +115,7 @@ const Wx = ({coordinates, setMapData, mapData}) => {
                         <h3>{apiData.city} {apiData.country}</h3>
                         <div className="time__date">
                             <h5>{error === null ? date : ""} {monthNames[month]}</h5>
-                            <h5>{error === null ? hour +` :` : " "} {error === null ? minutes : " "}</h5>
+                            <h5>{error === null ? hour + ` :` : " "} {error === null ? minutes : " "}</h5>
                         </div>
                     </div>
                     <span/>
